@@ -1,6 +1,8 @@
 require 'socket'
+require 'time'
 
-module RHTTP def get_request(sock)
+module RHTTP
+  def get_request(sock)
     req_text = read_request(sock)
     RHTTP::Request.new(req_text)
   end
@@ -14,6 +16,9 @@ module RHTTP def get_request(sock)
     end
   end
 
+  def default_headers 
+    { "time": "#{Time.now.httpdate}" }
+  end
 end
 
 class RHTTP::Request
@@ -39,11 +44,11 @@ class RHTTP::Response
                  version: "1.1",
                  status: 200,
                  message: "OK",
-                 headers: {})
+                 headers: default_headers)
     @version = version
     @status = status
     @message = message
-    @headers = headers
+    @headers = default_headers.merge(headers)
     @body = body
   end
 
