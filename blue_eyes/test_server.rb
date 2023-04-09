@@ -1,6 +1,5 @@
 require_relative 'lib/blue_eyes'
 
-
 server = TCPServer.new 4321
 
 loop do
@@ -10,8 +9,6 @@ loop do
   puts req
   resp = BlueEyes::Response.new("Hello from ruby")
   
-  puts "resp"
-  puts resp
   client.write resp.to_s
   client.close
 rescue

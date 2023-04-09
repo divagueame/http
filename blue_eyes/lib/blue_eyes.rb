@@ -8,6 +8,24 @@ module BlueEyes
   class ParseError < Error; end
 end
 
+module BlueEyes::DSL
+  def get(route, &handler)
+    @routes ||= []
+    @routes << [route, handler]
+  end
+
+  def match(url)
+    _, h = @routes.detect { |route, _| url[route] }
+    if h
+      BlueEyes::Response.new(h.call)
+    else
+      BlueEyes::Response.new("",
+                            status: 404,
+                            message: "No route found")
+    end
+  end
+end
+
 class BlueEyes::Request
   attr_reader :url
 
@@ -60,6 +78,7 @@ class BlueEyes::Response
     @headers = headers
     @body = body
   end
+  
     def to_s
       lines = [
         "HTTP/#{@version} #{@status} #{@message}"
