@@ -9,25 +9,58 @@ module BlueEyes
 end
 
 module BlueEyes::DSL
-  def get(route, &handler)
+ 
+  def match_route(route, method: :get, &handler)
     @routes ||= []
-    @routes << [route, handler]
+    case(route)
+    when String
+      p = proc { |u| u.start_with?(route) }
+    when Regexp
+      p = proc { |u| u.match?(route) }
+    else
+      pe = BlueEyes::ParseError
+      raise pe.new("Unexpected route!")
+    end
+    @routes << [p, method, handler]
+  end
+  
+  def get(route, &h)
+    match_route(route, method: :get, &h)
   end
 
-  def match(url)
-    _, h = @routes.detect { |route, _| url[route] }
+  def post(route, &h)
+    match_route(route, method: :post, &h)
+  end
+
+  def match(request)
+    url = request.url
+    method = request.method.downcase.to_sym
+    _, _, h = @routes.detect do |p, m, _|
+      m == method && p[url] 
+    end
+
     if h
-      BlueEyes::Response.new(h.call)
+      body = request.instance_eval(&h)
+      BlueEyes::Response.new(body,
+                             headers: {'content-type': 'text-html'})
     else
+      puts "No match"
       BlueEyes::Response.new("",
-                            status: 404,
-                            message: "No route found")
+                             status: 404,
+                             message: "No route found")
     end
   end
+ 
 end
 
 class BlueEyes::Request
   attr_reader :url
+  attr_reader :method
+  attr_reader :body
+  attr_reader :form_data
+  attr_reader :headers
+
+  URLENCODED = 'application/x-www-form-urlencoded'
 
   def initialize(s)
     parse_req s.gets
@@ -40,6 +73,16 @@ class BlueEyes::Request
     end
 
     parse_headers(head)
+    if @headers['content-type'] == URLENCODED
+      len = @headers['content-length']
+      if len
+        @body = s.read(len.to_i)
+      else
+        error = BlueEyes::ParseError
+        raise error.new("Need length for data!")
+      end
+      parse_form_body(@body)
+    end
   end
 
   def parse_req(line)
@@ -61,6 +104,21 @@ class BlueEyes::Request
     end
   end
 
+  def parse_form_body(s)
+    data = {}
+    s.split(/[;&]/).each do |kv|
+      next if kv.empty?
+      key, val = kv.split("=", 2)
+      data[form_unesc(key)] = form_unesc(val)
+    end
+    @form_data = data
+  end
+
+  def form_unesc(str)
+    str = str.gsub("+", " ")
+    str.gsub!(/%([0-9a-fA-F]{2})/) {$1.hex.chr}
+    str
+  end
 end
 
 

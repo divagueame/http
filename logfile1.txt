@@ -1,0 +1,31 @@
+== Info:   Trying 127.0.0.1:4321...
+== Info: Connected to localhost (127.0.0.1) port 4321 (#0)
+=> Send header, 78 bytes (0x4e)
+0000: 47 45 54 20 2f 20 48 54 54 50 2f 31 2e 31 0d 0a GET / HTTP/1.1..
+0010: 48 6f 73 74 3a 20 6c 6f 63 61 6c 68 6f 73 74 3a Host: localhost:
+0020: 34 33 32 31 0d 0a 55 73 65 72 2d 41 67 65 6e 74 4321..User-Agent
+0030: 3a 20 63 75 72 6c 2f 37 2e 38 31 2e 30 0d 0a 41 : curl/7.81.0..A
+0040: 63 63 65 70 74 3a 20 2a 2f 2a 0d 0a 0d 0a       ccept: */*....
+== Info: Mark bundle as not supporting multiuse
+<= Recv header, 17 bytes (0x11)
+0000: 48 54 54 50 2f 31 2e 31 20 32 30 30 20 4f 4b 0d HTTP/1.1 200 OK.
+0010: 0a                                              .
+<= Recv header, 25 bytes (0x19)
+0000: 63 6f 6e 74 65 6e 74 2d 74 79 70 65 3a 20 74 65 content-type: te
+0010: 78 74 2d 68 74 6d 6c 0d 0a                      xt-html..
+== Info: no chunk, no close, no size. Assume close to signal end
+<= Recv header, 2 bytes (0x2)
+0000: 0d 0a                                           ..
+<= Recv data, 161 bytes (0xa1)
+0000: 3c 66 6f 72 6d 20 61 63 74 69 6f 6e 3d 22 2f 22 <form action="/"
+0010: 20 6d 65 74 68 6f 64 3d 22 70 6f 73 74 22 3e 0a  method="post">.
+0020: 20 20 3c 6c 61 62 65 6c 20 66 6f 72 3d 22 77 68   <label for="wh
+0030: 6f 22 3e 57 68 6f 20 61 72 65 20 79 6f 75 3f 3c o">Who are you?<
+0040: 2f 6c 61 62 65 6c 3e 0a 20 20 3c 69 6e 70 75 74 /label>.  <input
+0050: 20 74 79 70 65 3d 22 74 65 78 74 22 20 6e 61 6d  type="text" nam
+0060: 65 3d 22 77 68 6f 22 20 2f 3e 0a 20 20 3c 69 6e e="who" />.  <in
+0070: 70 75 74 20 74 79 70 65 3d 22 73 75 62 6d 69 74 put type="submit
+0080: 22 20 76 61 6c 75 65 3d 22 54 68 61 74 27 73 20 " value="That's 
+0090: 6d 65 22 20 2f 3e 0a 3c 2f 66 6f 72 6d 3e 0a 0d me" />.</form>..
+00a0: 0a                                              .
+== Info: Closing connection 0
